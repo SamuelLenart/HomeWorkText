@@ -1,41 +1,39 @@
 package sk.kosickaakademia.lenart.homework;
 
 import java.io.*;
+import java.nio.Buffer;
 
 public class Repair {
     public void repairTextFile(String fileName) {
         BufferedReader reader;
+        String line;
+        char ch;
         try{
             if (!new File(fileName).exists()){
                 System.out.println("File does not exist!");
             }
             FileReader fr = new FileReader(fileName);
-            File file = new File("resource/repaired");
-            file.createNewFile();
-
-            FileWriter fw = new FileWriter(file);
+            File repairedFile = new File("resources/git.txt");
+            repairedFile.createNewFile();
+            FileWriter fw = new FileWriter(repairedFile);
             reader = new BufferedReader(fr);
-            String line;
-            while((line= reader.readLine())!=null){
+            while ((line = reader.readLine()) != null){
+                char[] originalLine = new char[line.length()];
                 for (int i = 0; i < line.length(); i++){
-                    char z = line.charAt(i);
-                    switch (z){
-                        case 'i' : fw.write('y'); break;
-                        case 'I' : fw.write('Y'); break;
-                        case 'y' : fw.write('i'); break;
-                        case 'Y' : fw.write('I'); break;
-                        case '?' : break;
-                        default: fw.write(z);
-                    }
+                    ch = line.charAt(i);
+                    if (ch == 'I') ch = 'Y';
+                    else if (ch == 'Y') ch = 'I';
+                    else if (ch == 'i') ch = 'y';
+                    else if (ch == 'y') ch = 'i';
+                    else if (ch == '?') continue;
+                    fw.write(ch);
                 }
                 fw.write("\n");
             }
-            fr.close();
+            reader.close();
             fw.close();
-
-        }catch(IOException ex){
+        }catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }
 }
